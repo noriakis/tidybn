@@ -1,0 +1,9 @@
+Package: tidybn
+Type: Package
+Title: Manipulation of Bayesian network
+Version: 0.0.1
+License: MIT
+Description: Manipulating Bayesian network in tidy ways
+Authors@R: person("Noriaki", "Sato", email = "nori@hgc.jp", role = c("cre", "aut"))
+Imports: bnlearn
+RoxygenNote: 7.2.3
