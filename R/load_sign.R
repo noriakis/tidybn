@@ -3,12 +3,13 @@
 #' Load the output of SiGN-BN (HC+BS)
 #'
 #' @param fileName the result of SiGN-BN
+#' @param return_tbl_graph return tbl_graph
 #'
 #' @return list of edges, nodes, strength, and bn (bnlearn)
 #' @examples loadSign("result.txt")
 #' @export
 #'
-loadSign <- function(fileName){
+loadSign <- function(fileName, return_tbl_graph=TRUE){
   returnList <- list()
   rawStr <- readChar(fileName, file.info(fileName)$size)
   edges <- read.csv(text=unlist(strsplit(rawStr, "\\[Edges]\n"))[2], sep="\t", header=F)

@@ -4,10 +4,12 @@
 \alias{loadSign}
 \title{loadSign}
 \usage{
-loadSign(fileName)
+loadSign(fileName, return_tbl_graph = TRUE)
 }
 \arguments{
 \item{fileName}{the result of SiGN-BN}
+
+\item{return_tbl_graph}{return tbl_graph}
 }
 \value{
 list of edges, nodes, strength, and bn (bnlearn)

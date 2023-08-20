@@ -65,7 +65,7 @@ tabu <- function (...)
     UseMethod("tabu")
 }
 #' @export
-setMethod("tabu", "tbl_df", function (x, start=NULL, whitelist=NULL,
+tabu.tbl_df <- function (x, start=NULL, whitelist=NULL,
                                     blacklist=NULL, score=NULL, ...,
                                     debug=FALSE, tabu=10, max.tabu=tabu,
                                     max.iter=Inf, maxp=Inf, optimized=TRUE) {
@@ -89,7 +89,7 @@ setMethod("tabu", "tbl_df", function (x, start=NULL, whitelist=NULL,
         attr(tblg, at) <- res$learning[[at]]
     }
     return(tblg)
-}) 
+}
 
 
 #' rsmax2
