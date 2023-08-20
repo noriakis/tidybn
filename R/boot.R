@@ -36,7 +36,8 @@ averaged.network.tbl_graph <- function(tblg, threshold) {
     attributes(raw_df)$threshold <- attributes(tblg)$threshold 
     attributes(raw_df)$nodes <- attributes(tblg)$nodes 
 
-    el <- raw_df |> bnlearn::averaged.network() |> bnlearn::as.igraph() |> igraph::as_edgelist() |>
+    el <- bnlearn::averaged.network(raw_df, threshold=threshold) |> 
+        bnlearn::as.igraph() |> igraph::as_edgelist() |>
       data.frame() |> `colnames<-`(c("from","to"))
     return(tbl_graph(edges=merge(el, raw_df)))
 }
