@@ -31,12 +31,13 @@ averaged.network.tbl_graph <- function(tblg, threshold) {
     nds <- tblg |> activate(nodes) |> data.frame()
     raw_df <- tblg |> activate(edges) |> data.frame() |>
             mutate(from=nds[.data$from,"name"], to=nds[.data$to,"name"])
-    class(raw_df) <- c(class(raw_df), "bn.strength")
-    attributes(raw_df)$method <- attributes(tblg)$method 
-    attributes(raw_df)$threshold <- attributes(tblg)$threshold 
-    attributes(raw_df)$nodes <- attributes(tblg)$nodes 
+    conv_df <- raw_df[,c("from","to","strength")]
+    class(conv_df) <- c(class(conv_df), "bn.strength")
+    attributes(conv_df)$method <- attributes(tblg)$method 
+    attributes(conv_df)$threshold <- attributes(tblg)$threshold 
+    attributes(conv_df)$nodes <- attributes(tblg)$nodes 
 
-    el <- bnlearn::averaged.network(raw_df, threshold=threshold) |> 
+    el <- bnlearn::averaged.network(conv_df, threshold=threshold) |> 
         bnlearn::as.igraph() |> igraph::as_edgelist() |>
       data.frame() |> `colnames<-`(c("from","to"))
     return(tbl_graph(edges=merge(el, raw_df)))

@@ -23,15 +23,27 @@ loadSign <- function(fileName, return_tbl_graph=TRUE){
   edges$V1 <- sapply(edges$V1, function(x) changeName[[as.character(x)]])
   edges$V2 <- sapply(edges$V2, function(x) changeName[[as.character(x)]])
   
-  signStr <- edges[,1:3]
+  signStr <- edges[,c(1:3)]
   colnames(signStr) <- c("from","to","strength")
+  convertStr <- edges[,c(1:3,5,7)]
+  colnames(convertStr) <- c("from","to","strength","direction","updown")
+
   attr(signStr, "nodes") <- unique(c(signStr$from, signStr$to))
-  signStr = structure(signStr, method = "bootstrap", threshold = 0, class = c("bn.strength", class(signStr)))
-  signBn <- averaged.network(signStr, threshold=bnlearn::inclusion.threshold(signStr))
+  signStr <- structure(signStr, method = "bootstrap", threshold = 0,
+    class = c("bn.strength", class(signStr)))
   
-  returnList[["str"]] <- signStr
-  returnList[["edges"]] <- edges
-  returnList[["nodes"]] <- nodes
-  returnList[["av"]] <- signBn
-  return(returnList)
+  if (return_tbl_graph) {
+    tblg <- as_tbl_graph(convertStr)
+    attributes(tblg)$method <- attributes(signStr)$method
+    attributes(tblg)$threshold <- bnlearn::inclusion.threshold(signStr)
+    attributes(tblg)$nodes <- attributes(signStr)$nodes
+    return(tblg)
+  } else {
+    returnList[["str"]] <- signStr
+    returnList[["edges"]] <- edges
+    returnList[["nodes"]] <- nodes
+    signBn <- bnlearn::averaged.network(signStr, threshold=bnlearn::inclusion.threshold(signStr))
+    returnList[["av"]] <- signBn
+    return(returnList)    
+  }
 }
