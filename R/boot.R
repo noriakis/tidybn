@@ -1,22 +1,24 @@
-
-#' @export
 boot.strength <- function (...) 
 {
     UseMethod("boot.strength")
 }
-
-
+#' @name boot.strength
+#' @rdname boot.strength
+#' @inherit bnlearn::boot.strength
+#' 
+#' @importFrom bnlearn boot.strength
 #' @export
 boot.strength.tbl_df <- function(data, cluster, R = 200, m = nrow(data),
   algorithm, algorithm.args = list(), cpdag = TRUE, debug = FALSE) {
     
-    df <- x |> as.data.frame()
+    df <- data |> as.data.frame()
     bs <- bnlearn::boot.strength(df, cluster=cluster, R = R, m = m,
         algorithm=algorithm, algorithm.args = algorithm.args, cpdag = cpdag, debug = debug)
     tblg <- as_tbl_graph(bs)
     attributes(tblg)$method <- attributes(bs)$method
     attributes(tblg)$threshold <- attributes(bs)$threshold
     attributes(tblg)$nodes <- attributes(bs)$nodes
+    class(tblg) <- c("tbl_bn", class(tblg))
     return(tblg)
 }
 
@@ -40,6 +42,7 @@ averaged.network.tbl_graph <- function(tblg, threshold) {
     el <- bnlearn::averaged.network(conv_df, threshold=threshold) |> 
         bnlearn::as.igraph() |> igraph::as_edgelist() |>
       data.frame() |> `colnames<-`(c("from","to"))
+    class(tblg) <- c("tbl_bn", class(tblg))
     return(tbl_graph(edges=merge(el, raw_df)))
 }
 

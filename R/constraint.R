@@ -30,6 +30,7 @@ pc.stable.tbl_df <- function(x, cluster, whitelist = NULL, blacklist = NULL, tes
     for (at in res$learning |> names()) {
         attr(tblg, at) <- res$learning[[at]]
     }
+    class(tblg) <- c("tbl_bn", class(tblg))
     return(tblg)       
 }
 
@@ -69,6 +70,8 @@ gs.tbl_df <- function(x, cluster, whitelist = NULL, blacklist = NULL, test = NUL
     for (at in res$learning |> names()) {
         attr(tblg, at) <- res$learning[[at]]
     }
+    class(tblg) <- c("tbl_bn", class(tblg))
+
     return(tblg)
 	
 }
@@ -109,5 +112,7 @@ iamb.tbl_df <- function(x, cluster, whitelist = NULL, blacklist = NULL, test = N
     for (at in res$learning |> names()) {
         attr(tblg, at) <- res$learning[[at]]
     }
+    class(tblg) <- c("tbl_bn", class(tblg))
+
     return(tblg)	
 }

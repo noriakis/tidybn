@@ -37,6 +37,7 @@ loadSign <- function(fileName, return_tbl_graph=TRUE){
     attributes(tblg)$method <- attributes(signStr)$method
     attributes(tblg)$threshold <- bnlearn::inclusion.threshold(signStr)
     attributes(tblg)$nodes <- attributes(signStr)$nodes
+    class(tblg) <- c("tbl_bn", class(tblg))
     return(tblg)
   } else {
     returnList[["str"]] <- signStr

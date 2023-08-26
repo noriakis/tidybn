@@ -45,6 +45,8 @@ rsmax2.tbl_df <- function(x, whitelist = NULL, blacklist = NULL,
     for (at in res$learning |> names()) {
         attr(tblg, at) <- res$learning[[at]]
     }
+    class(tblg) <- c("tbl_bn", class(tblg))
+
     return(tblg)
 }
 
@@ -77,6 +79,8 @@ mmhc.tbl_df <- function(x, whitelist = NULL, blacklist = NULL, restrict.args = l
     for (at in res$learning |> names()) {
         attr(tblg, at) <- res$learning[[at]]
     }
+    class(tblg) <- c("tbl_bn", class(tblg))
+
     return(tblg)    
 }
 
@@ -109,6 +113,8 @@ mmtabu.tbl_df <- function(x, whitelist = NULL, blacklist = NULL, restrict.args =
     for (at in res$learning |> names()) {
         attr(tblg, at) <- res$learning[[at]]
     }
+    class(tblg) <- c("tbl_bn", class(tblg))
+
     return(tblg)    
 }
 
@@ -141,5 +147,7 @@ h2pc.tbl_df <- function(x, whitelist = NULL, blacklist = NULL, restrict.args = l
     for (at in res$learning |> names()) {
         attr(tblg, at) <- res$learning[[at]]
     }
+    class(tblg) <- c("tbl_bn", class(tblg))
+
     return(tblg)       
 }

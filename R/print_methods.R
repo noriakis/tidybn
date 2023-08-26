@@ -6,29 +6,9 @@
 #' @importFrom rlang as_quosure sym
 #' @importFrom pillar style_subtle
 #' @export
-print.tbl_graph <- function(x, ...) {
-  arg_list <- list(...)
-  arg_list[['useS4']] <- NULL
-  graph_desc <- describe_graph_bn(x)
-  not_active <- if (active(x) == 'nodes') 'edges' else 'nodes'
-  top <- do.call(trunc_mat, modifyList(arg_list, list(x = as_tibble(x), n = 6)))
-  top$summary[1] <- paste0(top$summary[1], ' (active)')
-  names(top$summary)[1] <- toTitleCase(paste0(substr(active(x), 1, 4), ' data'))
-  bottom <- do.call(trunc_mat, modifyList(arg_list, list(x = as_tibble(x, active = not_active), n = 3)))
-  names(bottom$summary)[1] <- toTitleCase(paste0(substr(not_active, 1, 4), ' data'))
-  cat_subtle('# A tbl_graph: ', gorder(x), ' nodes and ', gsize(x), ' edges\n', sep = '')
-  cat_subtle('#\n')
-  cat_subtle('# ', graph_desc, '\n', sep = '')
-  cat_subtle('#\n')
-  sapply(describe_graph_bn_prop(x), function(text) {
-    cat_subtle('# ',text , '\n', sep = '')
-  })
-  cat_subtle('#\n')
-  print(top)
-  cat_subtle('#\n')
-  print(bottom)
-  invisible(x)
-}
+setClass("tbl_graph")
+setClass("tbl_bn", contains="tbl_graph")
+
 describe_graph_bn_prop <- function(x) {
     mb <- attr(x, "avg.mb") |> round(2)
     nbr <- attr(x, "avg.nbr") |> round(2)
@@ -67,3 +47,28 @@ is_forest <- function(x) {
   !is_connected(x) && is_simple(x) && (gorder(x) - gsize(x) - count_components(x) == 0)
 }
 cat_subtle <- function(...) cat(pillar::style_subtle(paste0(...)))
+
+print.tbl_bn <- function(x, ...) {
+  arg_list <- list(...)
+  arg_list[['useS4']] <- NULL
+  graph_desc <- describe_graph_bn(x)
+  not_active <- if (active(x) == 'nodes') 'edges' else 'nodes'
+  top <- do.call(trunc_mat, modifyList(arg_list, list(x = as_tibble(x), n = 6)))
+  top$summary[1] <- paste0(top$summary[1], ' (active)')
+  names(top$summary)[1] <- toTitleCase(paste0(substr(active(x), 1, 4), ' data'))
+  bottom <- do.call(trunc_mat, modifyList(arg_list, list(x = as_tibble(x, active = not_active), n = 3)))
+  names(bottom$summary)[1] <- toTitleCase(paste0(substr(not_active, 1, 4), ' data'))
+  cat_subtle('# A tbl_graph: ', gorder(x), ' nodes and ', gsize(x), ' edges\n', sep = '')
+  cat_subtle('#\n')
+  cat_subtle('# ', graph_desc, '\n', sep = '')
+  cat_subtle('#\n')
+  sapply(describe_graph_bn_prop(x), function(text) {
+    cat_subtle('# ',text , '\n', sep = '')
+  })
+  cat_subtle('#\n')
+  print(top)
+  cat_subtle('#\n')
+  print(bottom)
+  invisible(x)
+}
+register_s3_method("tidybn", "print", "tbl_bn")

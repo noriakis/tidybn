@@ -38,6 +38,8 @@ hc.tbl_df <- function(x, start=NULL, whitelist=NULL,
     for (at in res$learning |> names()) {
         attr(tblg, at) <- res$learning[[at]]
     }
+    class(tblg) <- c("tbl_bn", class(tblg))
+
     return(tblg)
 }
 
@@ -80,6 +82,8 @@ tabu.tbl_df <- function (x, start=NULL, whitelist=NULL,
     for (at in res$learning |> names()) {
         attr(tblg, at) <- res$learning[[at]]
     }
+    class(tblg) <- c("tbl_bn", class(tblg))
+
     return(tblg)
 }
 
