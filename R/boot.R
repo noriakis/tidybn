@@ -32,7 +32,7 @@ averaged.network.tbl_graph <- function(tblg, threshold) {
     nds <- tblg |> activate(nodes) |> data.frame()
     raw_df <- tblg |> activate(edges) |> data.frame() |>
             mutate(from=nds[.data$from,"name"], to=nds[.data$to,"name"])
-    conv_df <- raw_df[,c("from","to","strength")]
+    conv_df <- raw_df[,c("from","to","strength","direction")]
     class(conv_df) <- c(class(conv_df), "bn.strength")
     attributes(conv_df)$method <- attributes(tblg)$method 
     attributes(conv_df)$threshold <- attributes(tblg)$threshold 
