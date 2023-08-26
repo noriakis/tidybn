@@ -10,7 +10,8 @@ plotReducedDimWithGraph(
   dimred = "PCA",
   colour_by = "label",
   annotation = "label",
-  only_graph = FALSE,
+  only_tbl_graph = FALSE,
+  only_ggraph = FALSE,
   ...
 )
 }

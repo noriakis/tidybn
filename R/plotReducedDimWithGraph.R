@@ -1,10 +1,33 @@
+#' coefficientGraph
+#' @export
+coefficientGraph <- function(fitted) {
+
+    coef_graph <- lapply(names(fitted), function(x) {
+        coefs <- fitted[[x]]$coefficients 
+        coefs_label <- names(coefs)
+        coefs_label <- coefs_label[coefs_label!="(Intercept)"]
+        new_edge <- lapply(coefs_label, function(y) {
+            c(y, x, coefs[y] |> as.numeric())
+        })
+        do.call(rbind, new_edge)
+    })
+    coef_graph <- do.call(rbind, coef_graph) |>
+        data.frame() |>
+        `colnames<-`(c("from","to","coefficient")) |>
+        mutate(coefficient=as.numeric(coefficient))
+    coef_graph <- tbl_graph(edges=coef_graph)
+    coef_graph
+}
+
 #' plotReducedDimWithGraph
 #' @importFrom scater plotReducedDim
 #' @export
 plotReducedDimWithGraph <- function(graph, sce, dimred="PCA",
                                     colour_by="label",
                                     annotation="label",
-                                    only_graph=FALSE, ...) {
+                                    only_tbl_graph=FALSE,
+                                    only_ggraph=FALSE, ...) {
+
     plrd <- scater::plotReducedDim(sce, dimred=dimred,
                                    scattermore=TRUE,
                                    colour_by=colour_by, ...)+
@@ -29,8 +52,9 @@ plotReducedDimWithGraph <- function(graph, sce, dimred="PCA",
     points <- left_join(majority, points) |>   
         rename(name=colour_by)
     
-    gra_pos <- gra |> activate(nodes) |>
+    gra_pos <- graph |> activate(nodes) |>
         left_join(points, by="name")
+    if (only_tbl_graph) {return(gra_pos)}
     if (only_graph) {return(ggraph(gra_pos, layout="manual", x=X, y=Y))}
     plo <- ggraph(gra_pos, layout="manual", x=X, y=Y) + 
         geom_edge_diagonal( arrow=arrow(length=unit(1.5,"mm"), type="closed"))+
