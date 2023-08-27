@@ -11,9 +11,14 @@ plotReducedDimWithGraph(
   colour_by = "label",
   annotation = "label",
   only_tbl_graph = FALSE,
+  edge_color = "grey",
   only_ggraph = FALSE,
   ...
 )
+}
+\arguments{
+\item{colour_by}{scatter color in reduced dimension plot,
+should match the name of graph, otherwise output error}
 }
 \description{
 plotReducedDimWithGraph
