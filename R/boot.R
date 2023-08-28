@@ -68,3 +68,4 @@ register_s3_method <- function(pkg, generic, class, fun = NULL) {
   )
 }
 register_s3_method("tidybn", "averaged.network", "tbl_graph")
+register_s3_method("tidybn", "boot.strength", "tbl_df")
