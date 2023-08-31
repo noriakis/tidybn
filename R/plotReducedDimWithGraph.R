@@ -111,15 +111,17 @@ countEdge <- function(graph, sce, cluster="label",
     
     annot_count <- table(raw_points$annotation)
 
-    tibble(
-        node_names[gra_pos_ed$from, "annotation"],
-        node_names[gra_pos_ed$to, "annotation"]
-    ) |> `colnames<-`(c("from","to")) |>
+    print(gra_pos_ed)
+
+    gra_pos_ed |>
+        mutate(from=name_mapper[node_names[from,]$name],
+            to=name_mapper[node_names[to,]$name]) |>
         mutate(edge=paste0(from," -> ",to),
                from_c=annot_count[from],
                to_c=annot_count[to]) |>
         group_by(edge) |>
-        summarise(n=n(), from_c=unique(from_c),
+        summarise(n=n(), strength=mean(strength),
+            direction=mean(direction), from_c=unique(from_c),
                   to_c=unique(to_c)) |>
         arrange(desc(n))
 }
