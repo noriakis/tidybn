@@ -111,8 +111,6 @@ countEdge <- function(graph, sce, cluster="label",
     
     annot_count <- table(raw_points$annotation)
 
-    print(gra_pos_ed)
-
     gra_pos_ed |>
         mutate(from=name_mapper[node_names[from,]$name],
             to=name_mapper[node_names[to,]$name]) |>
