@@ -87,7 +87,7 @@ plotReducedDimWithGraph <- function(graph, sce, dimred="PCA",
 #' count edge number based on cluster label and annotation
 #' @export
 countEdge <- function(graph, sce, cluster="label",
-                      annotation="label") {
+                      annotation="label", coef=FALSE) {
     
     raw_points <- colData(sce) |>
         as.data.frame() |>
@@ -111,15 +111,30 @@ countEdge <- function(graph, sce, cluster="label",
     
     annot_count <- table(raw_points$annotation)
 
-    gra_pos_ed |>
-        mutate(from=name_mapper[node_names[from,]$name],
-            to=name_mapper[node_names[to,]$name]) |>
-        mutate(edge=paste0(from," -> ",to),
-               from_c=annot_count[from],
-               to_c=annot_count[to]) |>
-        group_by(edge) |>
-        summarise(n=n(), strength=mean(strength),
-            direction=mean(direction), from_c=unique(from_c),
-                  to_c=unique(to_c)) |>
-        arrange(desc(n))
+    if (coef) {
+        gra_pos_ed |>
+            mutate(from=name_mapper[node_names[from,]$name],
+                to=name_mapper[node_names[to,]$name]) |>
+            mutate(edge=paste0(from," -> ",to),
+                   from_c=annot_count[from],
+                   to_c=annot_count[to]) |>
+            group_by(edge) |>
+            summarise(n=n(), coefficient=mean(coefficient),
+                from_c=unique(from_c),
+                to_c=unique(to_c)) |>
+            arrange(desc(n))
+    } else {
+        gra_pos_ed |>
+            mutate(from=name_mapper[node_names[from,]$name],
+                to=name_mapper[node_names[to,]$name]) |>
+            mutate(edge=paste0(from," -> ",to),
+                   from_c=annot_count[from],
+                   to_c=annot_count[to]) |>
+            group_by(edge) |>
+            summarise(n=n(), strength=mean(strength),
+                direction=mean(direction),
+                from_c=unique(from_c),
+                to_c=unique(to_c)) |>
+            arrange(desc(n))        
+    }
 }
